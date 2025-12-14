@@ -24,6 +24,7 @@ const Feed = () => {
        })
 
     } else {
+      // fetch all categories
         client.fetch(feedQuery)
         .then((data) => {
           setPins(data);
@@ -32,7 +33,8 @@ const Feed = () => {
     }
   }, [categoryId])
 
-  if(loading) return <Spinner message="We are adding new ideas to your feed!" />
+  if(loading) return <Spinner message="We are adding new ideas to your feed..." />
+  // if(loading && !pins) return <h2>Unable to fetch Pins</h2>
 
   if(!pins?.length) return <h2 className='text-2xl text-center'>No Pins Available</h2>
   return (

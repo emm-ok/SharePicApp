@@ -1,57 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useGoogleLogin } from '@react-oauth/google';
 import { FcGoogle } from 'react-icons/fc';
 import shareVideo from '../assets/backg_vid2.mp4';
 import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
-
+import Spinner from './Spinner'
 
 import { client } from '../client';
 
 const Login = () => {
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
 
     const handleLogin = useGoogleLogin({
-      onSuccess: async(tokenResponse) => {
-        try {
-            // 1. Get user profile from Google API
-            const userInfo = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${tokenResponse.access_token}`
-                    },
-                }
-            ).then((res) => res.json());
-            
-            const { name, sub, picture } = userInfo;
+        onSuccess: async (tokenResponse) => {
+            setLoading(true);
+            try {
+                // 1. Get user profile from Google API
+                const userInfo = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenResponse.access_token}`
+                        },
+                    }
+                ).then((res) => res.json());
 
-            // 2. Save user info in local storage
-            localStorage.setItem('user', JSON.stringify(userInfo));
+                const { name, sub, picture } = userInfo;
 
-            // 3. Create user doc for Sanity
-            const doc = {
-            _id: sub,
-            _type: 'user',
-            userName: name,
-            image: picture,
-        };
+                // 2. Save user info in local storage
+                localStorage.setItem('user', JSON.stringify(userInfo));
 
-        await client.createIfNotExists(doc)   
+                // 3. Create user doc for Sanity
+                const doc = {
+                    _id: sub,
+                    _type: 'user',
+                    userName: name,
+                    image: picture,
+                };
 
-        // 4. redirect to home after login success
-        navigate('/', { replace: true});
+                await client.createIfNotExists(doc)
 
-        } catch (error) {
-            console.error("Login error:", error)
-        }
-      },  
+                setLoading(false);
+                // 4. redirect to home after login success
+                navigate('/', { replace: true });
+
+            } catch (error) {
+                console.error("Login error:", error)
+            }
+        },
 
 
-      onError: () => {
-        console.log('Google Sign-In Fialed');
-      },  
+        onError: () => {
+            console.log('Google Sign-In Fialed');
+        },
     })
-    
+
 
     return (
         <div className='flex justify-start items-center flex-col h-screen'>
@@ -65,19 +68,26 @@ const Login = () => {
                     className='w-full h-full object-cover'
                 />
 
-                <div className='absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 bg-blackOverlay'>
-                    <div className='p-5'>
-                        <img src={logo} width="130px" alt='logo' />
-                    </div>
+                <div className='absolute inset-0 bg-black/60 flex flex-col justify-center items-center'>
+                    {loading ? (
+                        <Spinner message="Signing in..." textColor />
+                    ) : (
+                        <>
+                            <div className='p-5'>
+                                <img src={logo} width="200" className='rounded-full' alt='logo' />
+                            </div>
 
-                    <div className='shadow-2xl'>
-                        <button
-                            type='button'
-                            className='bg-white flex justify-center items-center p-2 rounded-lg cursor-pointer outline-none'
-                            onClick={handleLogin}>
-                                <FcGoogle className='mr-4' /> Sign in with Google
-                            </button>
-                    </div>
+                            <div className='shadow-2xl'>
+                                <button
+                                    type='button'
+                                    className='bg-gradient-to-r from-purple-700 to-blue-500 flex justify-center items-center p-3 rounded-lg cursor-pointer outline-none'
+                                    onClick={handleLogin}>
+                                    <FcGoogle className='mr-4' fontSize={20} /> Sign in with Google
+                                </button>
+                            </div>
+                        </>
+                    )
+                    }
                 </div>
             </div>
         </div>

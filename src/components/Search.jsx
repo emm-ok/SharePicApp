@@ -6,7 +6,7 @@ import { feedQuery, searchQuery } from '../utils/data';
 import Spinner from './Spinner';
 
 
-const Search = ({ searchTerm, setSearchTerm, user }) => {
+const Search = ({ searchTerm }) => {
   const [pins, setPins] = useState(null);
   const [loading, setloading] = useState(false);
 

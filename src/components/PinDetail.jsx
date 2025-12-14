@@ -101,17 +101,17 @@ const PinDetail = ({ user }) => {
             to={`/user-profile/${pinDetail.postedBy?._id}`} className='flex gap-2 mt-5 items-center bg-white rounded-lg'>
             <img
               className='w-8 h-8 rounded-full object-cover'
-              src={pinDetail.postedBy?.image}
+              src={pinDetail?.postedBy?.image}
               alt="user"
             />
-            <p className='font-medium capitalize'>{pinDetail.postedBy?.userName}</p>
+            <p className='font-medium capitalize'>{pinDetail?.postedBy?.userName}</p>
           </Link>
           <h2 className='mt-5 text-2xl'>Comments</h2>
           <div className='max-h-370 overflow-y-auto'>
             {pinDetail?.comments?.map((comment, i) => (
               <div className='flex gap-2 mt-5 items-center bg-white rounded-lg' key={i}>
                 <img
-                  src={comment?.postedBy?.image}
+                  src={comment.postedBy.image}
                   alt="user-profile"
                   className='w-10 h-10 rounded-full cursor-pointer'
                 />
@@ -143,7 +143,7 @@ const PinDetail = ({ user }) => {
               className='bg-red-500 text-white rounded-full px-6 py-2 font-semibold text-base outline-none'
               onClick={addComment}
             >
-              {addingComment ? 'Posting comment...' : "Post"}
+              {addingComment ? 'Posting...' : "Post"}
             </button>
           </div>
         </div>
@@ -155,8 +155,10 @@ const PinDetail = ({ user }) => {
           </h2>
           <MasonryLayout pins={pins} />
         </>
-      ) : (
-        <Spinner message="Loading more Pins" />
+      ) :  pins?.length === 0 ? (
+        <h2 className='text-center font-bold text-2xl mt-8 mb-4'>No Related Pins Available</h2>
+      ) :(
+        <Spinner message="Loading more Pins..." />
       )}
     </>
   )

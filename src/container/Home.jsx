@@ -15,16 +15,10 @@ const Home = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [user, setUser] = useState(null);
   const scrollRef = useRef(null);
-  
-  
-  
   const userInfo = fetchUser();
-  // console.log("Parsed userInfo:", userInfo);
-  // console.log("Stored user:", storedUser);
-  // console.log("User ID passed to query:", userInfo?.sub);
 
   useEffect(() => {
-    const query = userQuery(userInfo.sub);
+    const query = userQuery(userInfo?.sub);
 
     client.fetch(query)
       .then((data) => {
@@ -64,7 +58,7 @@ const Home = () => {
           </div>
         )}
       </div>
-      <div className='pb-2 flex-1 hover:-screen overflow-y-scroll ' ref={scrollRef}>
+      <div className='pb-2 mt-10 flex-1 hover:h-screen overflow-y-scroll ' ref={scrollRef}>
         <Routes>
           <Route path='/user-profile/:userId' element={<UserProfile />} />
           <Route path='/*' element={<Pins user={user && user} />} />

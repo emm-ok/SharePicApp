@@ -21,6 +21,7 @@ const CreatePin = ({ user }) => {
 
   const uploadImage = (e) => {
     const { type, name } = e.target.files[0];
+    console.log(name)
 
     if(type === 'image/png' || type === 'image/svg' || type === 'image/jpeg' || type === 'image/gif' || type === 'image/tiff'){
       setWrongImageType(false);
@@ -155,7 +156,7 @@ const CreatePin = ({ user }) => {
               >
                 <option value="other" className='bg-white'>Select Category</option>
                 {categories.map((category) => (
-                  <option className='text-base border-0 outline-none capitalize bg-white text-black' value={category.name}>
+                  <option key={category.name} className='text-base border-0 outline-none capitalize bg-white text-black' value={category.name}>
                     {category.name}
                   </option>
                 ))}
@@ -165,7 +166,7 @@ const CreatePin = ({ user }) => {
               <button 
                 type='button'
                 onClick={savePin}
-                className='bg-red-500 text-white font-bold p-2 rounded-full w-28 outline-none'
+                className='bg-gradient-to-l from-blue-600 to-pink-500 text-white font-bold p-2 rounded-full w-28 outline-none'
               >
                 Save Pin
               </button>
