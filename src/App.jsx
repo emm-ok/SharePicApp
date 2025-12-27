@@ -14,7 +14,7 @@ const App = () => {
     if(!user){
       navigate('/login')
     }
-  }, [user])
+  }, [])
 
   return (
     <Routes>
