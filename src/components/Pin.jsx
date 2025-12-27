@@ -43,6 +43,16 @@ const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
         window.location.reload();
       })
   }
+  const getSafeUrl = (url) => {
+    if(!url) return '';
+    if(url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `https://${url}`;
+  }
+  const normalizedDestination = destination.startsWith('http')
+  ? destination
+  : `https://${destination}`;
 
 
   return (
@@ -88,9 +98,9 @@ const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
             )}
           </div>
           <div className='flex justify-between items-center gap-2 w-full'>
-            {destination && (
+            {destination && destination.includes('.') && (
               <a 
-                href={destination}
+                href={getSafeUrl(destination)}
                 target='_blank'
                 rel='noreferrer'
                 className='bg-white flex items-center gap-2 text-black font-bold p-2 pl-4 pr-4 rounded-full opacity-70 hover:opacity-100 hover:shadow-md'
